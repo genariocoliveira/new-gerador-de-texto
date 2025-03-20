@@ -34,6 +34,15 @@ const TimeInput: React.FC<TimeInputProps> = ({
 
   const handleBlur = () => {
     setIsFocused(false);
+    
+    // On blur, ensure time format is complete (add padding zeros for minutes if needed)
+    if (inputValue.includes(':') && inputValue.split(':')[1].length === 1) {
+      const parts = inputValue.split(':');
+      const updatedValue = `${parts[0]}:${parts[1].padStart(2, '0')}`;
+      setInputValue(updatedValue);
+      onChange(updatedValue);
+    }
+    
     if (required && inputValue === '') {
       setIsValid(false);
     } else if (inputValue !== '' && !isValidTimeFormat(inputValue)) {

@@ -1,5 +1,20 @@
-
 export const formatTimeInput = (value: string): string => {
+  // Keep any colons already present in the input
+  if (value.includes(':')) {
+    // Split at the colon
+    const parts = value.split(':');
+    
+    // Get hours and ensure it's valid (0-23)
+    const hours = Math.min(parseInt(parts[0] || '0', 10), 23);
+    
+    // Get minutes (only use digits) and ensure it's valid (0-59)
+    const minutesStr = parts[1] ? parts[1].replace(/\D/g, '') : '';
+    const minutes = Math.min(parseInt(minutesStr || '0', 10), 59);
+    
+    // Format properly, ensuring two digits for minutes when there's input
+    return `${hours}:${minutesStr.length > 0 ? minutes.toString().padStart(2, '0') : minutesStr}`;
+  }
+  
   // Remove all non-digits
   const digits = value.replace(/\D/g, '');
   
@@ -8,15 +23,15 @@ export const formatTimeInput = (value: string): string => {
   }
   
   // Format as HH:MM
-  const hours = parseInt(digits.substring(0, 2));
-  const minutes = digits.substring(2, 4);
+  const hours = Math.min(parseInt(digits.substring(0, 2), 10), 23);
+  const minutes = Math.min(parseInt(digits.substring(2, 4) || '0', 10), 59);
   
-  // Validate hours (0-23) and minutes (0-59)
-  if (hours > 23) {
-    return '23' + (minutes ? `:${minutes}` : '');
+  // Ensure two digits for minutes when we have them
+  if (digits.length > 2) {
+    return `${hours}:${minutes.toString().padStart(2, '0')}`;
   }
   
-  return `${hours}:${minutes}`;
+  return `${hours}`;
 };
 
 export const formatDateInput = (value: string): string => {
