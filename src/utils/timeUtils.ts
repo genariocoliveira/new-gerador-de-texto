@@ -11,27 +11,29 @@ export const formatTimeInput = (value: string): string => {
     const minutesStr = parts[1] ? parts[1].replace(/\D/g, '') : '';
     const minutes = Math.min(parseInt(minutesStr || '0', 10), 59);
     
-    // Format properly, ensuring two digits for minutes when there's input
-    return `${hours}:${minutesStr.length > 0 ? minutes.toString().padStart(2, '0') : minutesStr}`;
+    // Format properly with leading zeros for hours and minutes
+    return `${hours.toString().padStart(2, '0')}:${minutesStr.length > 0 ? minutes.toString().padStart(2, '0') : minutesStr}`;
   }
   
   // Remove all non-digits
   const digits = value.replace(/\D/g, '');
   
   if (digits.length <= 2) {
-    return digits;
+    // For hour inputs, pad with leading zero if less than 10
+    const hours = parseInt(digits, 10) || 0;
+    return hours.toString().padStart(2, '0');
   }
   
   // Format as HH:MM
   const hours = Math.min(parseInt(digits.substring(0, 2), 10), 23);
   const minutes = Math.min(parseInt(digits.substring(2, 4) || '0', 10), 59);
   
-  // Ensure two digits for minutes when we have them
+  // Ensure two digits for both hours and minutes
   if (digits.length > 2) {
-    return `${hours}:${minutes.toString().padStart(2, '0')}`;
+    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
   }
   
-  return `${hours}`;
+  return `${hours.toString().padStart(2, '0')}`;
 };
 
 export const formatDateInput = (value: string): string => {
