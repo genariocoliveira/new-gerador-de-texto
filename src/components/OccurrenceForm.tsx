@@ -1,10 +1,13 @@
 
 import React, { useState, useEffect } from "react";
-import TimeInput from "./TimeInput";
-import DateInput from "./DateInput";
 import Toast from "./Toast";
 import { calculateTimeDifference } from "../utils/timeUtils";
 import { copyToClipboard, generateGarageText, generateTripText } from "../utils/textGenerator";
+import CommonFormSection from "./form-sections/CommonFormSection";
+import TripFormSection from "./form-sections/TripFormSection";
+import GarageFormSection from "./form-sections/GarageFormSection";
+import SolutionTimeSection from "./form-sections/SolutionTimeSection";
+import FormActions from "./form-sections/FormActions";
 
 interface OccurrenceFormProps {
   type: "GARAGEM" | "VIAGEM";
@@ -192,323 +195,69 @@ const OccurrenceForm: React.FC<OccurrenceFormProps> = ({ type, onReset }) => {
         
         <div className="space-y-6">
           {/* Common Fields Section */}
-          <section>
-            <div className="chip mb-4">Informações do Carro</div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6">
-              <div className="mb-4">
-                <label htmlFor="carNumber" className="block text-sm font-medium mb-1 text-foreground">
-                  Número do Carro <span className="text-destructive">*</span>
-                </label>
-                <input
-                  id="carNumber"
-                  type="text"
-                  value={carNumber}
-                  onChange={(e) => setCarNumber(e.target.value)}
-                  className="form-input"
-                  placeholder="Ex: 1234"
-                  required
-                />
-              </div>
-              
-              <TimeInput
-                id="carTime"
-                label="Horário do Carro"
-                value={carTime}
-                onChange={setCarTime}
-                required
-              />
-              
-              <div className="mb-4">
-                <label htmlFor="carLine" className="block text-sm font-medium mb-1 text-foreground">
-                  Linha do Carro <span className="text-destructive">*</span>
-                </label>
-                <input
-                  id="carLine"
-                  type="text"
-                  value={carLine}
-                  onChange={(e) => setCarLine(e.target.value)}
-                  className="form-input"
-                  placeholder="Ex: IAU X FOR"
-                  required
-                />
-              </div>
-              
-              <DateInput
-                id="tripDate"
-                label="Data da Viagem"
-                value={tripDate}
-                onChange={setTripDate}
-                required
-              />
-              
-              <div className="mb-4">
-                <label htmlFor="driver" className="block text-sm font-medium mb-1 text-foreground">
-                  Motorista <span className="text-destructive">*</span>
-                </label>
-                <input
-                  id="driver"
-                  type="text"
-                  value={driver}
-                  onChange={(e) => setDriver(e.target.value)}
-                  className="form-input"
-                  placeholder="Nome do motorista"
-                  required
-                />
-              </div>
-              
-              <div className="mb-4">
-                <label htmlFor="ccoDuty" className="block text-sm font-medium mb-1 text-foreground">
-                  Plantão CCO <span className="text-destructive">*</span>
-                </label>
-                <input
-                  id="ccoDuty"
-                  type="text"
-                  value={ccoDuty}
-                  onChange={(e) => setCcoDuty(e.target.value)}
-                  className="form-input"
-                  placeholder="Nome do plantonista"
-                  required
-                />
-              </div>
-            </div>
-          </section>
+          <CommonFormSection 
+            carNumber={carNumber}
+            setCarNumber={setCarNumber}
+            carTime={carTime}
+            setCarTime={setCarTime}
+            carLine={carLine}
+            setCarLine={setCarLine}
+            tripDate={tripDate}
+            setTripDate={setTripDate}
+            driver={driver}
+            setDriver={setDriver}
+            ccoDuty={ccoDuty}
+            setCcoDuty={setCcoDuty}
+          />
           
-          {/* Trip Specific Fields */}
-          {type === "VIAGEM" && (
-            <section>
-              <div className="chip mb-4">Informações do Socorro</div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6">
-                <div className="mb-4">
-                  <label htmlFor="rescueCar" className="block text-sm font-medium mb-1 text-foreground">
-                    Carro de Socorro <span className="text-destructive">*</span>
-                  </label>
-                  <input
-                    id="rescueCar"
-                    type="text"
-                    value={rescueCar}
-                    onChange={(e) => setRescueCar(e.target.value)}
-                    className="form-input"
-                    placeholder="Ex: 5678"
-                    required
-                  />
-                </div>
-                
-                <TimeInput
-                  id="callTime"
-                  label="Horário do Chamado"
-                  value={callTime}
-                  onChange={setCallTime}
-                  required
-                />
-                
-                <TimeInput
-                  id="rescueDepartureTime"
-                  label="Horário da Saída do Socorro"
-                  value={rescueDepartureTime}
-                  onChange={setRescueDepartureTime}
-                  required
-                />
-                
-                <TimeInput
-                  id="arrivalAtLocation"
-                  label="Chegada no Local"
-                  value={arrivalAtLocation}
-                  onChange={setArrivalAtLocation}
-                  required
-                />
-                
-                <div className="mb-4 sm:col-span-2">
-                  <label htmlFor="sosReason" className="block text-sm font-medium mb-1 text-foreground">
-                    Motivo do SOS <span className="text-destructive">*</span>
-                  </label>
-                  <textarea
-                    id="sosReason"
-                    value={sosReason}
-                    onChange={(e) => setSosReason(e.target.value)}
-                    className="form-input min-h-[80px]"
-                    placeholder="Descreva o motivo do SOS"
-                    required
-                  />
-                </div>
-                
-                <div className="mb-4">
-                  <label htmlFor="sosLocationCity" className="block text-sm font-medium mb-1 text-foreground">
-                    Cidade Local do SOS <span className="text-destructive">*</span>
-                  </label>
-                  <input
-                    id="sosLocationCity"
-                    type="text"
-                    value={sosLocationCity}
-                    onChange={(e) => setSosLocationCity(e.target.value)}
-                    className="form-input"
-                    placeholder="Ex: Fortaleza"
-                    required
-                  />
-                </div>
-                
-                <div className="mb-4">
-                  <label className="block text-sm font-medium mb-1 text-foreground">
-                    Troca do Carro? <span className="text-destructive">*</span>
-                  </label>
-                  <div className="flex gap-4 mt-2">
-                    <label className="flex items-center">
-                      <input
-                        type="radio"
-                        name="carChangeRequired"
-                        value="SIM"
-                        checked={carChangeRequired === "SIM"}
-                        onChange={() => setCarChangeRequired("SIM")}
-                        className="mr-2"
-                      />
-                      <span>Sim</span>
-                    </label>
-                    
-                    <label className="flex items-center">
-                      <input
-                        type="radio"
-                        name="carChangeRequired"
-                        value="NÃO"
-                        checked={carChangeRequired === "NÃO"}
-                        onChange={() => setCarChangeRequired("NÃO")}
-                        className="mr-2"
-                      />
-                      <span>Não</span>
-                    </label>
-                  </div>
-                </div>
-                
-                <TimeInput
-                  id="returnTime"
-                  label="Horário de Retorno"
-                  value={returnTime}
-                  onChange={setReturnTime}
-                  required
-                />
-                
-                <TimeInput
-                  id="garageArrivalTime"
-                  label="Horário de Chegada na Garagem"
-                  value={garageArrivalTime}
-                  onChange={setGarageArrivalTime}
-                  required
-                />
-              </div>
-            </section>
-          )}
-          
-          {/* Garage Specific Fields */}
-          {type === "GARAGEM" && (
-            <section>
-              <div className="chip mb-4">Informações da Entrada</div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6">
-                <TimeInput
-                  id="entryTime"
-                  label="Horário da Entrada"
-                  value={entryTime}
-                  onChange={setEntryTime}
-                  required
-                />
-                
-                <TimeInput
-                  id="exitTime"
-                  label="Horário da Saída"
-                  value={exitTime}
-                  onChange={setExitTime}
-                  required
-                />
-                
-                <div className="mb-4 sm:col-span-2">
-                  <label htmlFor="entryReason" className="block text-sm font-medium mb-1 text-foreground">
-                    Motivo da Entrada <span className="text-destructive">*</span>
-                  </label>
-                  <textarea
-                    id="entryReason"
-                    value={entryReason}
-                    onChange={(e) => setEntryReason(e.target.value)}
-                    className="form-input min-h-[80px]"
-                    placeholder="Descreva o motivo da entrada na garagem"
-                    required
-                  />
-                </div>
-                
-                <div className="mb-4">
-                  <label className="block text-sm font-medium mb-1 text-foreground">
-                    Troca do Carro? <span className="text-destructive">*</span>
-                  </label>
-                  <div className="flex gap-4 mt-2">
-                    <label className="flex items-center">
-                      <input
-                        type="radio"
-                        name="carChangeRequired"
-                        value="SIM"
-                        checked={carChangeRequired === "SIM"}
-                        onChange={() => setCarChangeRequired("SIM")}
-                        className="mr-2"
-                      />
-                      <span>Sim</span>
-                    </label>
-                    
-                    <label className="flex items-center">
-                      <input
-                        type="radio"
-                        name="carChangeRequired"
-                        value="NÃO"
-                        checked={carChangeRequired === "NÃO"}
-                        onChange={() => setCarChangeRequired("NÃO")}
-                        className="mr-2"
-                      />
-                      <span>Não</span>
-                    </label>
-                  </div>
-                </div>
-              </div>
-            </section>
+          {/* Type Specific Fields */}
+          {type === "VIAGEM" ? (
+            <TripFormSection 
+              rescueCar={rescueCar}
+              setRescueCar={setRescueCar}
+              callTime={callTime}
+              setCallTime={setCallTime}
+              rescueDepartureTime={rescueDepartureTime}
+              setRescueDepartureTime={setRescueDepartureTime}
+              arrivalAtLocation={arrivalAtLocation}
+              setArrivalAtLocation={setArrivalAtLocation}
+              sosReason={sosReason}
+              setSosReason={setSosReason}
+              sosLocationCity={sosLocationCity}
+              setSosLocationCity={setSosLocationCity}
+              carChangeRequired={carChangeRequired}
+              setCarChangeRequired={setCarChangeRequired}
+              returnTime={returnTime}
+              setReturnTime={setReturnTime}
+              garageArrivalTime={garageArrivalTime}
+              setGarageArrivalTime={setGarageArrivalTime}
+            />
+          ) : (
+            <GarageFormSection 
+              entryTime={entryTime}
+              setEntryTime={setEntryTime}
+              exitTime={exitTime}
+              setExitTime={setExitTime}
+              entryReason={entryReason}
+              setEntryReason={setEntryReason}
+              carChangeRequired={carChangeRequired}
+              setCarChangeRequired={setCarChangeRequired}
+            />
           )}
           
           {/* Solution & Time Section */}
-          <section>
-            <div className="chip mb-4">Solução e Tempo</div>
-            <div className="grid grid-cols-1 gap-x-6">
-              <div className="mb-4">
-                <label htmlFor="problemSolution" className="block text-sm font-medium mb-1 text-foreground">
-                  Solução do Problema <span className="text-destructive">*</span>
-                </label>
-                <textarea
-                  id="problemSolution"
-                  value={problemSolution}
-                  onChange={(e) => setProblemSolution(e.target.value)}
-                  className="form-input min-h-[80px]"
-                  placeholder="Descreva a solução aplicada ao problema"
-                  required
-                />
-              </div>
-              
-              {totalTime && (
-                <div className="mb-6 p-4 bg-secondary/50 rounded-lg border border-border">
-                  <p className="font-medium">Tempo total da ocorrência:</p>
-                  <p className="text-xl font-bold">{totalTime}</p>
-                </div>
-              )}
-            </div>
-          </section>
+          <SolutionTimeSection 
+            problemSolution={problemSolution}
+            setProblemSolution={setProblemSolution}
+            totalTime={totalTime}
+          />
           
           {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 mt-8">
-            <button
-              onClick={generateText}
-              className="btn-primary flex-1 flex items-center justify-center"
-            >
-              GERAR TEXTO
-            </button>
-            
-            <button onClick={clearAllFields} className="btn-secondary flex-1">
-              LIMPAR CAMPOS
-            </button>
-            
-            <button onClick={onReset} className="btn-secondary flex-1">
-              VOLTAR
-            </button>
-          </div>
+          <FormActions 
+            onGenerateText={generateText}
+            onClearFields={clearAllFields}
+            onReset={onReset}
+          />
         </div>
       </div>
       
