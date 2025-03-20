@@ -1,65 +1,37 @@
 export const formatTimeInput = (value: string): string => {
-  // Remove all non-digits and colons
-  const cleaned = value.replace(/[^\d:]/g, '');
-  
-  // If it already has a colon
-  if (cleaned.includes(':')) {
-    const [hours, minutesPart] = cleaned.split(':');
+  // Keep any colons already present in the input
+  if (value.includes(':')) {
+    // Split at the colon
+    const parts = value.split(':');
     
-    // Handle hours
-    let formattedHours = '';
-    if (hours.length > 0) {
-      const parsedHours = parseInt(hours, 10);
-      if (!isNaN(parsedHours)) {
-        formattedHours = Math.min(parsedHours, 23).toString().padStart(2, '0');
-      } else {
-        formattedHours = '00';
-      }
-    } else {
-      formattedHours = '00';
-    }
+    // Get hours and ensure it's valid (0-23)
+    const hours = Math.min(parseInt(parts[0] || '0', 10), 23);
     
-    // Handle minutes
-    let formattedMinutes = '';
-    if (minutesPart && minutesPart.length > 0) {
-      const parsedMinutes = parseInt(minutesPart, 10);
-      if (!isNaN(parsedMinutes)) {
-        formattedMinutes = Math.min(parsedMinutes, 59).toString().padStart(2, '0');
-      } else {
-        formattedMinutes = minutesPart;
-      }
-    } else {
-      formattedMinutes = minutesPart;
-    }
+    // Get minutes (only use digits) and ensure it's valid (0-59)
+    const minutesStr = parts[1] ? parts[1].replace(/\D/g, '') : '';
+    const minutes = Math.min(parseInt(minutesStr || '0', 10), 59);
     
-    // Combine hours and minutes
-    return formattedHours + ':' + formattedMinutes;
+    // Format properly, ensuring two digits for minutes when there's input
+    return `${hours}:${minutesStr.length > 0 ? minutes.toString().padStart(2, '0') : minutesStr}`;
   }
   
-  // Handle input without colon
-  if (cleaned.length === 0) {
-    return '';
-  }
+  // Remove all non-digits
+  const digits = value.replace(/\D/g, '');
   
-  if (cleaned.length <= 2) {
-    const parsedHours = parseInt(cleaned, 10);
-    if (!isNaN(parsedHours)) {
-      return Math.min(parsedHours, 23).toString().padStart(2, '0');
-    }
-    return cleaned;
+  if (digits.length <= 2) {
+    return digits;
   }
   
   // Format as HH:MM
-  const hours = cleaned.substring(0, 2);
-  const minutes = cleaned.substring(2, 4);
+  const hours = Math.min(parseInt(digits.substring(0, 2), 10), 23);
+  const minutes = Math.min(parseInt(digits.substring(2, 4) || '0', 10), 59);
   
-  const parsedHours = parseInt(hours, 10);
-  const formattedHours = !isNaN(parsedHours) ? Math.min(parsedHours, 23).toString().padStart(2, '0') : '00';
+  // Ensure two digits for minutes when we have them
+  if (digits.length > 2) {
+    return `${hours}:${minutes.toString().padStart(2, '0')}`;
+  }
   
-  const parsedMinutes = parseInt(minutes, 10);
-  const formattedMinutes = !isNaN(parsedMinutes) ? Math.min(parsedMinutes, 59).toString().padStart(2, '0') : '00';
-  
-  return `${formattedHours}:${formattedMinutes}`;
+  return `${hours}`;
 };
 
 export const formatDateInput = (value: string): string => {

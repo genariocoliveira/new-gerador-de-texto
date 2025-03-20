@@ -35,30 +35,14 @@ const TimeInput: React.FC<TimeInputProps> = ({
   const handleBlur = () => {
     setIsFocused(false);
     
-    // On blur, ensure time format is complete and properly formatted
-    if (inputValue) {
-      let updatedValue = inputValue;
-      
-      // Handle case where only hours are entered (no colon)
-      if (!inputValue.includes(':') && inputValue.length > 0) {
-        const hours = Math.min(parseInt(inputValue, 10), 23);
-        updatedValue = `${hours.toString().padStart(2, '0')}:00`;
-      } 
-      // Handle case where hours and colon are entered but minutes are incomplete
-      else if (inputValue.includes(':')) {
-        const parts = inputValue.split(':');
-        const hours = Math.min(parseInt(parts[0] || '0', 10), 23);
-        const minutes = parts[1] ? Math.min(parseInt(parts[1], 10), 59) : 0;
-        updatedValue = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
-      }
-      
-      if (updatedValue !== inputValue) {
-        setInputValue(updatedValue);
-        onChange(updatedValue);
-      }
+    // On blur, ensure time format is complete (add padding zeros for minutes if needed)
+    if (inputValue.includes(':') && inputValue.split(':')[1].length === 1) {
+      const parts = inputValue.split(':');
+      const updatedValue = `${parts[0]}:${parts[1].padStart(2, '0')}`;
+      setInputValue(updatedValue);
+      onChange(updatedValue);
     }
     
-    // Validate the time format
     if (required && inputValue === '') {
       setIsValid(false);
     } else if (inputValue !== '' && !isValidTimeFormat(inputValue)) {
