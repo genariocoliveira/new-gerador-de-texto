@@ -183,14 +183,15 @@ const OccurrenceForm: React.FC<OccurrenceFormProps> = ({ type, onReset }) => {
   };
   
   return (
-    <div className="animate-fade-in w-full max-w-3xl mx-auto p-6">
-      <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-subtle border border-border p-8">
+    <div className="animate-fade-in w-full max-w-3xl mx-auto min-h-screen sm:min-h-fit sm:p-6">
+      <div className="bg-white/80 w-full h-full backdrop-blur-sm sm:rounded-2xl shadow-subtle border-0 sm:border border-border p-4 sm:p-8">
         <div className="mb-6">
           <h2 className="text-2xl font-bold">{type === "VIAGEM" ? "Ocorrência em Viagem" : "Ocorrência na Garagem"}</h2>
           <p className="text-muted-foreground">Preencha os dados da ocorrência</p>
         </div>
         
         <div className="space-y-6">
+          {/* ... rest of the form content ... */}
           {/* Common Fields Section */}
           <section>
             <div className="chip mb-4">Informações do Carro</div>

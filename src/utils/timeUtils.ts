@@ -1,37 +1,36 @@
 export const formatTimeInput = (value: string): string => {
-  // Keep any colons already present in the input
-  if (value.includes(':')) {
-    // Split at the colon
-    const parts = value.split(':');
+  if (!value) return '';
+
+  // Remove all non-digits and colons
+  const cleanValue = value.replace(/[^\d:]/g, '');
+  
+  if (cleanValue.includes(':')) {
+    const [hours, minutesPart] = cleanValue.split(':');
     
-    // Get hours and ensure it's valid (0-23)
-    const hours = Math.min(parseInt(parts[0] || '0', 10), 23);
-    
-    // Get minutes (only use digits) and ensure it's valid (0-59)
-    const minutesStr = parts[1] ? parts[1].replace(/\D/g, '') : '';
-    const minutes = Math.min(parseInt(minutesStr || '0', 10), 59);
-    
-    // Format properly, ensuring two digits for minutes when there's input
-    return `${hours}:${minutesStr.length > 0 ? minutes.toString().padStart(2, '0') : minutesStr}`;
+    // Handle hours
+    if (hours.length > 0) {
+      const hoursNum = Math.min(parseInt(hours, 10), 23);
+      const formattedHours = hoursNum.toString().padStart(2, '0');
+      
+      // Return just hours with colon if no minutes yet
+      if (!minutesPart) {
+        return `${formattedHours}:`;
+      }
+      
+      // Keep original minutes input
+      return `${formattedHours}:${minutesPart.slice(0, 2)}`;
+    }
+    return '';
   }
   
-  // Remove all non-digits
-  const digits = value.replace(/\D/g, '');
-  
-  if (digits.length <= 2) {
-    return digits;
+  // Handle input without colon
+  if (cleanValue.length <= 2) {
+    const hoursNum = Math.min(parseInt(cleanValue || '0', 10), 23);
+    return hoursNum.toString().padStart(2, '0');
   }
   
-  // Format as HH:MM
-  const hours = Math.min(parseInt(digits.substring(0, 2), 10), 23);
-  const minutes = Math.min(parseInt(digits.substring(2, 4) || '0', 10), 59);
-  
-  // Ensure two digits for minutes when we have them
-  if (digits.length > 2) {
-    return `${hours}:${minutes.toString().padStart(2, '0')}`;
-  }
-  
-  return `${hours}`;
+  const hoursNum = Math.min(parseInt(cleanValue.slice(0, 2), 10), 23);
+  return `${hoursNum.toString().padStart(2, '0')}:${cleanValue.slice(2, 4)}`;
 };
 
 export const formatDateInput = (value: string): string => {
