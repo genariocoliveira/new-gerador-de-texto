@@ -58,6 +58,7 @@ const TimeInput: React.FC<TimeInputProps> = ({
       }
     }
     
+    // Validate the time format
     if (required && inputValue === '') {
       setIsValid(false);
     } else if (inputValue !== '' && !isValidTimeFormat(inputValue)) {

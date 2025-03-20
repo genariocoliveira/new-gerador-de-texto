@@ -1,39 +1,65 @@
 export const formatTimeInput = (value: string): string => {
-  // Keep any colons already present in the input
-  if (value.includes(':')) {
-    // Split at the colon
-    const parts = value.split(':');
+  // Remove all non-digits and colons
+  const cleaned = value.replace(/[^\d:]/g, '');
+  
+  // If it already has a colon
+  if (cleaned.includes(':')) {
+    const [hours, minutesPart] = cleaned.split(':');
     
-    // Get hours and ensure it's valid (0-23)
-    const hours = Math.min(parseInt(parts[0] || '0', 10), 23);
+    // Handle hours
+    let formattedHours = '';
+    if (hours.length > 0) {
+      const parsedHours = parseInt(hours, 10);
+      if (!isNaN(parsedHours)) {
+        formattedHours = Math.min(parsedHours, 23).toString().padStart(2, '0');
+      } else {
+        formattedHours = '00';
+      }
+    } else {
+      formattedHours = '00';
+    }
     
-    // Get minutes (only use digits) and ensure it's valid (0-59)
-    const minutesStr = parts[1] ? parts[1].replace(/\D/g, '') : '';
-    const minutes = Math.min(parseInt(minutesStr || '0', 10), 59);
+    // Handle minutes
+    let formattedMinutes = '';
+    if (minutesPart && minutesPart.length > 0) {
+      const parsedMinutes = parseInt(minutesPart, 10);
+      if (!isNaN(parsedMinutes)) {
+        formattedMinutes = Math.min(parsedMinutes, 59).toString().padStart(2, '0');
+      } else {
+        formattedMinutes = minutesPart;
+      }
+    } else {
+      formattedMinutes = minutesPart;
+    }
     
-    // Format properly with leading zeros for hours and minutes
-    return `${hours.toString().padStart(2, '0')}:${minutesStr.length > 0 ? minutes.toString().padStart(2, '0') : minutesStr}`;
+    // Combine hours and minutes
+    return formattedHours + ':' + formattedMinutes;
   }
   
-  // Remove all non-digits
-  const digits = value.replace(/\D/g, '');
+  // Handle input without colon
+  if (cleaned.length === 0) {
+    return '';
+  }
   
-  if (digits.length <= 2) {
-    // For hour inputs, pad with leading zero if less than 10
-    const hours = parseInt(digits, 10) || 0;
-    return hours.toString().padStart(2, '0');
+  if (cleaned.length <= 2) {
+    const parsedHours = parseInt(cleaned, 10);
+    if (!isNaN(parsedHours)) {
+      return Math.min(parsedHours, 23).toString().padStart(2, '0');
+    }
+    return cleaned;
   }
   
   // Format as HH:MM
-  const hours = Math.min(parseInt(digits.substring(0, 2), 10), 23);
-  const minutes = Math.min(parseInt(digits.substring(2, 4) || '0', 10), 59);
+  const hours = cleaned.substring(0, 2);
+  const minutes = cleaned.substring(2, 4);
   
-  // Ensure two digits for both hours and minutes
-  if (digits.length > 2) {
-    return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
-  }
+  const parsedHours = parseInt(hours, 10);
+  const formattedHours = !isNaN(parsedHours) ? Math.min(parsedHours, 23).toString().padStart(2, '0') : '00';
   
-  return `${hours.toString().padStart(2, '0')}`;
+  const parsedMinutes = parseInt(minutes, 10);
+  const formattedMinutes = !isNaN(parsedMinutes) ? Math.min(parsedMinutes, 59).toString().padStart(2, '0') : '00';
+  
+  return `${formattedHours}:${formattedMinutes}`;
 };
 
 export const formatDateInput = (value: string): string => {
