@@ -512,7 +512,18 @@ const OccurrenceForm: React.FC<OccurrenceFormProps> = ({ type, onReset }) => {
           </div>
         </div>
       </div>
-      
+      {/* Footer */}
+      <footer className="fixed bottom-0 left-0 right-0 bg-white/80 backdrop-blur-sm border-t border-border text-center py-4 text-sm text-muted-foreground">
+        <p>Desenvolvido por Genário Oliveira</p>
+        <a 
+          href="https://github.com/genariocoliveira" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="hover:text-foreground transition-colors"
+        >
+          GitHub
+        </a>
+      </footer>
       {/* Toast notification */}
       {toast.visible && (
         <Toast
