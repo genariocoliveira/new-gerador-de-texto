@@ -1,17 +1,13 @@
 <<<<<<< HEAD
-# Welcome to your Lovable project
+# Welcome
 
 ## Project info
-
-**URL**: https://lovable.dev/projects/8ba0a6ff-9a45-4413-a012-05613b68c124
 
 ## How can I edit this code?
 
 There are several ways of editing your application.
 
 **Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/8ba0a6ff-9a45-4413-a012-05613b68c124) and start prompting.
 
 Changes made via Lovable will be committed automatically to this repo.
 
@@ -61,13 +57,6 @@ This project is built with .
 - shadcn-ui
 - Tailwind CSS
 
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/8ba0a6ff-9a45-4413-a012-05613b68c124) and click on Share -> Publish.
-
-## I want to use a custom domain - is that possible?
-
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
 =======
 # gerador-de-texto
 >>>>>>> b5101192bac91d93c6020aa553779057c30ca22a
